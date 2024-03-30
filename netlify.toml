@@ -1,3 +1,3 @@
 [build]
-command = "npm run start"  # ou o comando que você usa para construir o seu projeto
+command = "npm run build"  # ou o comando que você usa para construir o seu projeto
 publish = "public"  # diretório onde o seu projeto será construído
