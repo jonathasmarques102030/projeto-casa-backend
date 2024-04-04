@@ -14,7 +14,11 @@ app.use(bodyParser.urlencoded({
   limit: '50mb',
   extended: true
 }));
-app.use(cors());
+
+app.get('/', function(req, res) {
+  res.send('Página inicial do meu aplicativo');
+});
+
 app.use(express.json());
 app.use(usuarioRouter);
 app.use(produtoRouter);
