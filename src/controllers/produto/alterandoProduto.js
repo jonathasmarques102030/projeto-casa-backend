@@ -1,11 +1,14 @@
-const { hash } = require("bcrypt")
-
 const alterandoProdutoController = async (req, res) => {
     try {
         let produto = require("../../models/produto");
         const idProduto = req.params.idProduto;
         const { titulo, descricao, quartos, suites, banheiros, areaUtil, areaTotal, localizacao, valor, imagem } = req.body;
-        const produtoExistente = produto.findByPk(idProduto);
+
+        const produtoExistente = await produto.findByPk(idProduto);
+        if (!produtoExistente) {
+            return res.status(404).json({ message: "Produto não encontrado!" });
+        }
+
         await produto.update({
             titulo: titulo || produtoExistente.titulo,
             descricao: descricao || produtoExistente.descricao,
@@ -17,12 +20,15 @@ const alterandoProdutoController = async (req, res) => {
             localizacao: localizacao || produtoExistente.localizacao,
             valor: valor || produtoExistente.valor,
             imagem: imagem || produtoExistente.imagem
+        }, { where: { idProduto } });
 
-        }, { where: { idProduto: idProduto } });
+        // Obtenha o produto atualizado
         const produtoAtualizado = await produto.findByPk(idProduto);
-        return res.json({ message: "produto atualizado com sucesso!", produto: produtoAtualizado })
+        
+        return res.json({ message: "Produto atualizado com sucesso!", produto: produtoAtualizado });
     } catch (err) {
-        return console.log(err)
+        console.log(err);
+        return res.status(500).json({ error: "Ocorreu um erro ao atualizar o produto" });
     }
 };
 
